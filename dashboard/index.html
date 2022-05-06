@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+                     
+<html>
+    <head>
+      <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+      <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+      <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+      <script src="https://cdn.anychart.com/releases/v8/themes/morning.min.js"></script>
+      <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+      <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+      <style type="text/css">
+    
+        html,
+        body,
+        #container {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+      
+    </style>
+    </head>
+    <body>
+      
+      <div id="container"></div>
+      
+    
+      <script>
+    
+        anychart.onDocumentReady(function () {
+        // set chart theme
+    anychart.theme('morning');
+          // variable to help us define screen proportions
+          var screenRatio;
+    
+          // data for the charts
+          var englishData = anychart.data.set([
+                  ['A1', 12],
+                  ['A2', 25],
+                  ['B1', 20],
+                  ['B2', 24],
+                  ['C1', 19],
+                  ['C2', 8]
+                ]);
+    
+          var tierSet = anychart.data.set([
+            ['Operaciones-Calidad', 774, 116, 160],
+            ['MTTO-DIMA', 623, 194, 233],
+            ['Comercial-Planeamiento', 854, 77, 119],
+            ['DIGI-SC', 772, 159, 119],
+            ['Resto-Soft', 772, 159, 119]
+                ]);
+            
+         var firstSeriesData = tierSet.mapAs({ x: 0, value: 1 });
+         var secondSeriesData = tierSet.mapAs({ x: 0, value: 2 });
+         var thirdSeriesData = tierSet.mapAs({ x: 0, value: 3 });
+
+    
+          // set default using the theme
+          var dashboardTheme = {
+            chart: {
+              margin: 0,
+              padding: [15, 30, 15, 15],
+              title: {
+                enabled: true,
+                fontColor: '#212121',
+                fontSize: 13,
+                padding: [0, 0, 10, 0]
+              },
+              defaultXAxisSettings: {
+                title: {
+                  enabled: false,
+                  fontSize: 12,
+                  margin: 0,
+                  padding: [3, 0, 0, 0]
+                },
+                labels: { fontSize: 11, padding: [0, 0, 0, 0] }
+              },
+              defaultYAxisSettings: {
+                title: {
+                  enabled: true,
+                  fontSize: 12,
+                  margin: 0,
+                  padding: [0, 0, 3, 0]
+                },
+                labels: { fontSize: 11, padding: [0, 0, 0, 0] }
+              }
+            }
+          };
+          // apply the theme
+          anychart.theme(dashboardTheme);
+    
+          // create stage for all charts
+          var stage = acgraph.create('container');
+    
+          var title = anychart.standalones.title();
+          title.text('Visualización del perfil de los candidatos');
+          title.container(stage).draw();
+    
+          var pieChart = anychart.pie(englishData);
+          pieChart.title('Porcentaje de candidatos por nivel de inglés')
+          pieChart.labels().position('outside').fontSize(10).format('{%x}');
+          pieChart.radius('43%')
+          pieChart.innerRadius('30%');
+          pieChart.container(stage).draw();
+    
+          var barChart = anychart.bar();
+          barChart.title('Proporción de recomendados');
+          barChart.animation(true);
+          barChart.yScale().minimum(0);
+          barChart.xAxis().labels().rotation(-90).padding([0, 0, 20, 0]);
+          barChart.yAxis().labels().format('{%Value}{groupsSeparator: }');
+          var setupSeries = function (series, name) {
+                series.name(name);
+                series.hovered().labels(false);
+
+                series
+                .labels()
+                .enabled(true)
+                .position('right-center')
+                .anchor('left-center')
+                .format('{%Value}{groupsSeparator: }');
+
+                series
+                .tooltip()
+                .position('right')
+                .anchor('left-center')
+                .offsetX(5)
+                .offsetY(0)
+                .titleFormat('{%X}')
+                .format('{%SeriesName} : {%Value}{groupsSeparator: }');
+            };
+            var series;
+            series = barChart.bar(firstSeriesData);
+            setupSeries(series, 'No recomendado');
+
+            series = barChart.bar(secondSeriesData);
+            setupSeries(series, 'Recomendado');
+
+            series = barChart.bar(thirdSeriesData);
+            setupSeries(series, 'Altamente recomendado');
+
+            barChart.legend().enabled(true).fontSize(13).padding([0, 0, 20, 0]);
+            barChart.interactivity().hoverMode('single');
+            barChart.tooltip().positionMode('point');
+
+            barChart.yAxis().title('Metricas');
+            barChart.container(stage).draw();
+    
+          // chart placement
+          function configureChartsSize() {
+            if (window.innerWidth > 768) {
+              screenRatio = 'wide';
+              pieChart.bounds(0, 30, '40%', '50%');
+              barChart.bounds('33.3%', 30, '60%', '80%');
+            } else {
+              screenRatio = 'slim';
+              pieChart.bounds(0, 30, '50%', '33.3%');
+              barChart.bounds('50%', 30, '50%', '33.3%');
+            }
+          }
+    
+          configureChartsSize();
+    
+          // On resize change layout to mobile version or otherwise
+          window.onresize = function () {
+            if (screenRatio === 'slim' && window.innerWidth > 767) {
+              configureChartsSize('wide');
+            } else if (window.innerWidth <= 767) {
+              configureChartsSize('slim');
+            }
+            title.parentBounds(0, 0, stage.width(), 130).draw();
+          };
+        });
+      
+    </script>
+    </body>
+    </html>
+    
+                    

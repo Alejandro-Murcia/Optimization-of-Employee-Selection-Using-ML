@@ -1,10 +1,10 @@
+
 # -*- coding: utf-8 -*-
 
 import numpy as np
 import pickle
-import sqlite3
 import os
-from flask import Flask, request, render_template, send_from_directory, url_for, flash, redirect
+from flask import Flask, request, render_template, send_from_directory
 
 
 # Load ML model
@@ -12,24 +12,25 @@ model = pickle.load(open('SVM.pkl','rb'))
 
 # Create application
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your secret key'
+
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('SeleccionPersonal.html')
 
 # Bind home function to URL
 @app.route('/seleccion')
 def home():
     return render_template('SeleccionPersonal.html')
 
-@app.route('/about')
+@app.route('/limpieza')
 def stanford_page():
     return render_template('_about.html')
 
-@app.route('/seleccion')
+@app.route('/dash')
 def selec():
-    return render_template('SeleccionPersonal.html')
+    return render_template('dashboard.html')
+
 
 # Icon
 @app.route('/favicon.ico')
@@ -54,7 +55,7 @@ def predict():
         features.append(1.0)
     else:
         features.append(0.0)
-    features.append(last_feature) 
+    features.append(last_feature)
 
     # Convert features to array
     array_features = [np.array(features)]
@@ -70,7 +71,6 @@ def predict():
     else:
         return render_template('SeleccionPersonal.html', 
                                result = 'No apto para ser contratado')
-    
 
 if __name__ == '__main__':
 #Run the application

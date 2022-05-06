@@ -45,7 +45,7 @@ def predict():
         features.append(1.0)
     else:
         features.append(0.0)
-    features.append(last_feature)
+    features.append(last_feature) # hola soy dany 
 
     # Convert features to array
     array_features = [np.array(features)]

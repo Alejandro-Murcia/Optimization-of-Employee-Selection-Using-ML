@@ -22,6 +22,10 @@ def home():
 def stanford_page():
     return render_template('_about.html')
 
+@app.route('/seleccion')
+def selec():
+    return render_template('SeleccionPersonal.html')
+
 # Icon
 @app.route('/favicon.ico')
 def favicon():

@@ -2,8 +2,9 @@
 
 import numpy as np
 import pickle
+import sqlite3
 import os
-from flask import Flask, request, render_template, send_from_directory
+from flask import Flask, request, render_template, send_from_directory, url_for, flash, redirect
 
 
 # Load ML model
@@ -11,7 +12,12 @@ model = pickle.load(open('SVM.pkl','rb'))
 
 # Create application
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your secret key'
 
+@app.route('/create', methods=('GET', 'POST'))
+def create():
+    return 'Hello, World!'
+    #return render_template('create.html')
 
 # Bind home function to URL
 @app.route('/')

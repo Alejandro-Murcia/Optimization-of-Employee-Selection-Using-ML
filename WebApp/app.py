@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 
 # Bind home function to URL
-@app.route('/seleccionpersonal')
+@app.route('/')
 def home():
     return render_template('SeleccionPersonal.html')
 
@@ -62,10 +62,6 @@ def predict():
         return render_template('SeleccionPersonal.html', 
                                result = 'No apto para ser contratado')
     
-# Bind home function to URL
-@app.route('/')
-def home():
-    return render_template('SeleccionPersonal.html')
 
 if __name__ == '__main__':
 #Run the application

@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 
 # Bind home function to URL
-@app.route('/')
+@app.route('/seleccionpersonal')
 def home():
     return render_template('SeleccionPersonal.html')
 
@@ -45,7 +45,7 @@ def predict():
         features.append(1.0)
     else:
         features.append(0.0)
-    features.append(last_feature) # hola soy dany 
+    features.append(last_feature) 
 
     # Convert features to array
     array_features = [np.array(features)]
@@ -61,6 +61,11 @@ def predict():
     else:
         return render_template('SeleccionPersonal.html', 
                                result = 'No apto para ser contratado')
+    
+# Bind home function to URL
+@app.route('/')
+def home():
+    return render_template('SeleccionPersonal.html')
 
 if __name__ == '__main__':
 #Run the application

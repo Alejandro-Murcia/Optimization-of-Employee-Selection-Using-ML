@@ -14,13 +14,12 @@ model = pickle.load(open('SVM.pkl','rb'))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
-@app.route('/create', methods=('GET', 'POST'))
-def create():
-    return 'Hello, World!'
-    #return render_template('create.html')
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 # Bind home function to URL
-@app.route('/')
+@app.route('/seleccion')
 def home():
     return render_template('SeleccionPersonal.html')
 
